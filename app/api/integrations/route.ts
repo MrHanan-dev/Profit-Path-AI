@@ -184,7 +184,7 @@ async function syncIntegrationData(userId: string, integrationName: string) {
     where: { id: integration.id },
     data: {
       metadata: {
-        ...integration.metadata,
+        ...(integration.metadata as object || {}),
         lastSync: new Date().toISOString()
       }
     }

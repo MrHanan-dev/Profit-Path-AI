@@ -169,66 +169,71 @@ export default function DashboardPage() {
     doc.setTextColor(17, 24, 39)
     doc.text('Key Performance Metrics', 20, 95)
     
-    const metricsData = [
+    // Define metrics data with type annotation
+    const metricsTableData: string[][] = [
       ['Metric', 'Value', 'Change'],
       ['Monthly Revenue', '$155,000', '+8.3%'],
       ['Monthly Profit', '$68,000', '+12.5%'],
       ['Profit Margin', '43.9%', '+2.1%'],
       ['Cost Savings', '$12,400', '+15.2%']
-    ]
+    ];
     
-         (doc as any).autoTable({
-       startY: 105,
-       head: [metricsData[0]],
-       body: metricsData.slice(1),
-       theme: 'grid',
-       headStyles: { fillColor: [59, 130, 246] },
-       styles: { fontSize: 10 }
-     })
+    // Add metrics table
+    (doc as any).autoTable({
+      startY: 105,
+      head: [metricsTableData[0]],
+      body: metricsTableData.slice(1),
+      theme: 'grid',
+      headStyles: { fillColor: [59, 130, 246] },
+      styles: { fontSize: 10 }
+    });
     
     // Profit Opportunities
     doc.setFontSize(14)
     doc.setTextColor(17, 24, 39)
     doc.text('Profit Optimization Opportunities', 20, 160)
     
-    const opportunitiesData = profitOpportunities.map(opp => [
+    // Define opportunities data with type annotation
+    const opportunitiesTableData: string[][] = profitOpportunities.map(opp => [
       opp.title,
       `$${opp.potential.toLocaleString()}`,
       opp.priority.toUpperCase(),
       opp.action
-    ])
+    ]);
     
-         (doc as any).autoTable({
-       startY: 170,
-       head: [['Opportunity', 'Potential Savings', 'Priority', 'Recommended Action']],
-       body: opportunitiesData,
-       theme: 'grid',
-       headStyles: { fillColor: [59, 130, 246] },
-       styles: { fontSize: 8 },
-       columnStyles: {
-         0: { cellWidth: 50 },
-         1: { cellWidth: 30 },
-         2: { cellWidth: 25 },
-         3: { cellWidth: 85 }
-       }
-     })
+    // Add opportunities table
+    (doc as any).autoTable({
+      startY: 170,
+      head: [['Opportunity', 'Potential Savings', 'Priority', 'Recommended Action']],
+      body: opportunitiesTableData,
+      theme: 'grid',
+      headStyles: { fillColor: [59, 130, 246] },
+      styles: { fontSize: 8 },
+      columnStyles: {
+        0: { cellWidth: 50 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 25 },
+        3: { cellWidth: 85 }
+      }
+    });
     
     // Product Performance
     doc.setFontSize(14)
     doc.setTextColor(17, 24, 39)
     doc.text('Product Performance Analysis', 20, 220)
     
-    const productData = productPerformance.map(product => [
+    // Define product data with type annotation
+    const productTableData: string[][] = productPerformance.map(product => [
       product.name,
       `$${product.revenue.toLocaleString()}`,
       `${product.margin}%`,
       product.sales.toLocaleString()
-    ])
+    ]);
     
          (doc as any).autoTable({
        startY: 230,
        head: [['Product', 'Revenue', 'Margin', 'Sales']],
-       body: productData,
+       body: productTableData,
        theme: 'grid',
        headStyles: { fillColor: [59, 130, 246] },
        styles: { fontSize: 9 }
