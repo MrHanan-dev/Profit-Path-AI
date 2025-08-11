@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  company   String?
+  companySize String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  integrations Integration[]
+  analytics    Analytics[]
+  opportunities ProfitOpportunity[]
+  alerts       Alert[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Integration {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String   // QuickBooks, Xero, Shopify, Stripe
+  status      String   @default("disconnected") // connected, disconnected, pending
+  accessToken String?
+  refreshToken String?
+  expiresAt   DateTime?
+  metadata    Json?    // Store integration-specific data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+  @@map("integrations")
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // overview, opportunities, reports, integrations
+  data      Json     // Store analytics data
+  period    String   // monthly, quarterly, yearly
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("analytics")
+}
+
+model ProfitOpportunity {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // subscription, pricing, advertising, operational
+  title       String
+  description String
+  potential   Float
+  priority    String   // high, medium, low
+  action      String
+  status      String   @default("open") // open, in_progress, completed, dismissed
+  metadata    Json?    // Additional opportunity data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profit_opportunities")
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // warning, success, info, error
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  amount      Float
+  status      String   // active, unused, expired
+  lastUsed    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("subscriptions")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  revenue     Float
+  margin      Float
+  sales       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("products")
+}
